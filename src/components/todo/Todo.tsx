@@ -1,8 +1,9 @@
 import styles from './Todo.module.scss';
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import type { Todo } from "../../entities/Todo";
 import { useLists } from "../../contexts/ListsContext";
 import type { List } from "../../entities/List";
+import Title from '../shared/title/Title';
 
 export type TodoProps = Todo & {
     listId: List['id']
@@ -18,20 +19,11 @@ const TodoComponent = (props: TodoProps) => {
     } = props;
 
     const { listsDispatcher } = useLists();
-    const [edit, setEdit] = useState<boolean>(false);
 
     const inputId = useMemo(() => `input-${id}`, [id]);
 
-    const onEdit = useCallback(() => {
-        setEdit(true);
-    }, []);
-
-    const onBlur = useCallback(() => {
-        setEdit(false);
-    }, []);
-
-    const onTodoInput = useCallback((e: any) => {
-        listsDispatcher({ entity: 'todo', action: 'updateTodo', label: e.target.value, id, listId });
+    const editTodoLabel = useCallback((value: string) => {
+        listsDispatcher({ entity: 'todo', action: 'updateTodo', label: value, id, listId });
     }, [])
 
     const onCheckedChange = useCallback((e: any) => {
@@ -45,13 +37,7 @@ const TodoComponent = (props: TodoProps) => {
     return (
         <div id={id} className={styles.container}>
             <input id={inputId} type="checkbox" defaultChecked={checked} onChange={onCheckedChange} />
-            {edit ?
-                <input type="text" value={label} onInput={onTodoInput} onBlur={onBlur} /> :
-                <label htmlFor={inputId}>{label}</label>
-            }
-            <button onClick={onEdit} className={styles.edit}>
-                <span className="material-symbols-outlined">edit</span>
-            </button>
+            <Title asLabel={true} htmlFor={id} title={label} updateTitle={editTodoLabel} />
             <div onClick={removeTodo} className={styles['remove-todo']}>Delete todo</div>
         </div>
     )
