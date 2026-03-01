@@ -2,4 +2,12 @@
     display: flex;   
     gap: 10px;
     align-items: center;
+    width: 100%;
+    background-color: var(--color-grey-d);
+    .checkbox {
+        border-radius: 6px;
+        height: 24px;
+        width: 24px;
+    cursor: pointer;
+    }
 }

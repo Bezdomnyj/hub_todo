@@ -4,6 +4,7 @@ import type { Todo } from "../../entities/Todo";
 import { useLists } from "../../contexts/ListsContext";
 import type { List } from "../../entities/List";
 import Title from '../shared/title/Title';
+import Button from '../shared/button/Button';
 
 export type TodoProps = Todo & {
     listId: List['id']
@@ -26,9 +27,9 @@ const TodoComponent = (props: TodoProps) => {
         listsDispatcher({ entity: 'todo', action: 'updateTodo', label: value, id, listId });
     }, [])
 
-    const onCheckedChange = useCallback((e: any) => {
-        listsDispatcher({ entity: 'todo', action: 'updateTodo', checked: e.target.checked, id, listId });
-    }, [])
+    const toggleChecked = useCallback(() => {
+        listsDispatcher({ entity: 'todo', action: 'updateTodo', checked: !checked, id, listId });
+    }, [checked])
 
     const removeTodo = useCallback(() => {
         listsDispatcher({ entity: 'todo', action: 'removeTodo', id, listId });
@@ -36,9 +37,9 @@ const TodoComponent = (props: TodoProps) => {
 
     return (
         <div id={id} className={styles.container}>
-            <input id={inputId} type="checkbox" defaultChecked={checked} onChange={onCheckedChange} />
-            <Title asLabel={true} htmlFor={id} title={label} updateTitle={editTodoLabel} />
-            <div onClick={removeTodo} className={styles['remove-todo']}>Delete todo</div>
+            <input id={inputId} className={styles.checkbox} type="checkbox" checked={checked} onChange={toggleChecked} />
+            <Title asLabel={true} htmlFor={id} id={id} title={label} updateTitle={editTodoLabel} onClick={toggleChecked} />
+            <Button click={removeTodo} parentModuleClasses={[styles.remove]} icon={'delete'} classes={['main', 'hover-enabled']} />
         </div>
     )
 }

@@ -1,4 +1,12 @@
 .container {
+    font-size: 1rem;
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    .list {
+        // padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 }
